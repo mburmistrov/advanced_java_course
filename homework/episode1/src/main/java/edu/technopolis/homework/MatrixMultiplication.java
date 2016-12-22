@@ -1,58 +1,102 @@
 package edu.technopolis.homework;
+
 import java.util.Scanner;
 
 /**
- * Matrix multiplication home task.
- * <br/>
- * Matrix dimension and elements are passed as CLI arguments.
+ * Created by mmb on 22.12.16.
  */
-public class MatrixMultiplication {
-    public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        int N = in.nextInt();
-        int M = in.nextInt();
-        int X = in.nextInt();
-        int Y = in.nextInt();
-        
-        if (!(M != X || N == 0 || M == 0 || X == 0 || Y == 0)) {
-            double[][] matrixA = new double[N][M];
-            double[][] matrixB = new double[X][Y];
-            double[][] matrixResult;
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < M; j++) {
-                    matrixA[i][j] = in.nextDouble();
-                }
-            }
-            for (int i = 0; i < X; i++) {
-                for (int j = 0; j < Y; j++) {
-                    matrixB[i][j] = in.nextDouble();
-                }
-            }
+class MatrixMultiplication
+{
+    public static void main(String args[])
+    {
+        int m, n, p, q, i, j;
 
-            matrixResult = performMatrixMultiplication(matrixA, matrixB);
-            for (int i = 0; i < N; i++) {
-                for (int j = 0; j < Y; j++) {
-                    System.out.print(matrixResult[i][j] + "  ");
-                }
-                System.out.println();
-            }
-        } else {
-            System.out.println("Некорректные матрицы. Кол-во столбцов 1-ой матрицы должно сопвпадать с кол-вом строк 2-ой матрицы, размерности не должны содержать нули.");
+        Scanner in = new Scanner(System.in);
+        System.out.println("Введите количество строк и столбцов первой матрицы");
+
+        try {
+            m = in.nextInt();
+            n = in.nextInt();
+        }catch(java.util.InputMismatchException ex){
+            System.out.println("Ошибка ввода");
+            return;
         }
-        return;
+
+        if(m <= 0 || n <= 0){
+            System.out.println("Размерности должны быть положительными, окончание работы");
+            return;
+        }
+
+        double matrixA[][] = new double[m][n];
+
+        System.out.println("Введите элементы первой матрицы (заполнение происходит построчно)");
+
+        for (i = 0; i < m; i++){
+            for (j = 0; j < n; j++) {
+                try {
+                    matrixA[i][j] = in.nextDouble();
+                }catch(java.util.InputMismatchException ex){
+                    System.out.println("Ошибка ввода, окончание работы");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Введите количество строк и столбцов второй матрицы (заполнение происходит построчно)");
+        try {
+            p = in.nextInt();
+            q = in.nextInt();
+        }catch(java.util.InputMismatchException ex){
+            System.out.println("Ошибка ввода, окончание работы");
+            return;
+        }
+
+        if(p <= 0 || q <= 0){
+            System.out.println("Размерности должны быть положительными, окончание работы");
+            return;
+        }
+
+        if (n != p) {
+            System.out.println("Кол-во столбцов 1-ой матрицы должно совпадать с кол-вом строк 2-ой матрицы, окончание работы");
+            return;
+        }
+
+        double matrixB[][] = new double[p][q];
+
+        System.out.println("Введите элементы второй матрицы");
+
+        for (i = 0; i < p; i++) {
+            for (j = 0; j < q; j++) {
+                try {
+                    matrixB[i][j] = in.nextDouble();
+                }catch(java.util.InputMismatchException ex){
+                    System.out.println("Ошибка ввода, окончание работы");
+                    return;
+                }
+            }
+        }
+
+        System.out.println("Результат");
+
+        double matrixResult[][] = performMatrixMultiplication(matrixA, matrixB);
+
+        for (i = 0; i < m; i++ ) {
+            for (j = 0; j < q; j++) {
+                System.out.print(matrixResult[i][j] + "\t");
+            }
+            System.out.print("\n");
+        }
     }
-    
+
     public static double[][] performMatrixMultiplication(double[][] matrixA, double[][] matrixB){
         double[][] res = new double[matrixA.length][matrixB[0].length];
         for (int i = 0; i < matrixA.length; i++) {
-            for (int j = 0; j < matrixA[0].length; j++) {
+            for (int j = 0; j < matrixB[0].length; j++) {
                 for (int r = 0; r < matrixA[0].length; r++) {
-                    res[i][j] += matrixB[i][r] * matrixB[r][j];
+                    res[i][j] += matrixA[i][r] * matrixB[r][j];
                 }
             }
         }
         return res;
     }
-
-    
 }
